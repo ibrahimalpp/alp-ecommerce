@@ -1,21 +1,18 @@
 import { createDirectus, rest, registerUser } from '@directus/sdk';
 import { NextResponse } from 'next/server';
 
-const client = createDirectus(process.env.NEXT_PUBLIC_DIRECTUS_URL as string).with(rest());
+const client = createDirectus(process.env.API_URL as string).with(rest());
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, email, password } = body;
 
-    // email ve password sırası DÜZGÜN OLMALI
     const result = await client.request(
       registerUser(email, password, {
-        first_name: name, // ekstra bilgi
+        first_name: name,
       })
     );
-
-
 
     return NextResponse.json({ success: true, result });
   } catch (error: any) {
