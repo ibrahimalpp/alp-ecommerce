@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, LogOut, UserCircle, Wallet } from 'lucide-react';
+import { User, LogOut, UserCircle, Wallet, Heart, Package } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,27 +15,19 @@ import {
 
 const UserButton = () => {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    setIsClient(true);
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        setUser(JSON.parse(userData));
-      }
-    }
+    const userData = localStorage.getItem('user');
+    if (userData) setUser(JSON.parse(userData));
   }, []);
-
-  if (!isClient) return null;
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
-    router.refresh();
     router.push('/auth/login');
+    router.refresh();
   };
 
   return (
@@ -57,26 +49,40 @@ const UserButton = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-  align="end"
-  sideOffset={8}
-  className="w-52 rounded-xl border border-gray-200 bg-white/80 backdrop-blur-sm p-2 animate-fadeScale shadow-xl"
->
-
+        align="end"
+        sideOffset={8}
+        className="w-52 rounded-xl border border-gray-200 bg-white/80 backdrop-blur-sm p-2 animate-fadeScale shadow-xl"
+      >
         {user ? (
           <>
             <div className="px-3 py-2">
               <p className="text-sm font-semibold">👋 Merhaba, {user.first_name}</p>
             </div>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuItem onClick={() => router.push('/profile')} className="gap-2">
               <UserCircle className="w-4 h-4" />
               Profilim
             </DropdownMenuItem>
+
             <DropdownMenuItem onClick={() => router.push('/topup')} className="gap-2">
               <Wallet className="w-4 h-4" />
               Bakiye Yükle
             </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => router.push('/favorites')} className="gap-2">
+              <Heart className="w-4 h-4 text-pink-500" />
+              Favorilerim
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => router.push('/orders')} className="gap-2">
+              <Package className="w-4 h-4" />
+              Siparişlerim
+            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuItem
               onClick={handleLogout}
               className="text-red-600 gap-2 hover:bg-red-100 hover:animate-shake"

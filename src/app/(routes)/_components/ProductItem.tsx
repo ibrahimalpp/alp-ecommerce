@@ -1,18 +1,58 @@
+'use client';
+
 import { Product } from "@/app/constans";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { APIURL } from "@/app/constans";
 import Link from "next/link";
-import SepeteEkleButton from "@/components/SepeteEkleButton"; // 🔥 Bunu ekliyoruz!
+import SepeteEkleButton from "@/components/SepeteEkleButton";
+import { useFavoritesStore } from "@/store/favoritesStore";
+import { Heart } from "lucide-react";
 
 interface ProductItemProps {
   product: Product;
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
+  const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
+
+  const [isClient, setIsClient] = useState(false);
+  const [favoriMi, setFavoriMi] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    setFavoriMi(isFavorite(product.id));
+  }, [isFavorite, product.id]);
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault(); // Link'e gitmesini engelle
+    if (favoriMi) {
+      removeFavorite(product.id);
+      setFavoriMi(false);
+    } else {
+      addFavorite(product);
+      setFavoriMi(true);
+    }
+  };
+
   return (
-    <div className="flex flex-col border border-slate-200 rounded-2xl hover:shadow-lg transition overflow-hidden">
-      {/* 🔥 SADECE ÜRÜN BİLGİSİ LİNKE KOYUYORUZ */}
+    <div className="flex flex-col border border-slate-200 rounded-2xl hover:shadow-lg transition overflow-hidden relative">
+
+      {/* 💜 Favori Kalp Butonu */}
+      {isClient && (
+        <button
+          onClick={handleToggleFavorite}
+          className="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:bg-gray-100 z-10"
+        >
+          <Heart
+            className={`w-5 h-5 transition-colors ${
+              favoriMi ? "text-red-500 fill-red-500" : "text-gray-400"
+            }`}
+          />
+        </button>
+      )}
+
+      {/* Ürün Detay Linki */}
       <Link href={`/product/${product.id}`}>
         <div className="p-2 flex items-center justify-center bg-gray-50">
           <Image
@@ -53,7 +93,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
         </div>
       </Link>
 
-      {/* 🔥 LİNKE SARMADAN SEPETE EKLE BUTONU */}
+      {/* Sepete Ekle Butonu */}
       <div className="px-4 pb-4 mt-2">
         <SepeteEkleButton product={product} />
       </div>

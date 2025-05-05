@@ -5,7 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
@@ -44,9 +51,10 @@ const LoginPage = () => {
         throw new Error(data.message || "Giriş başarısız");
       }
 
-      setUser(data.user); // zustand içine user kaydediyoruz
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
+      setUser(data.user);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      localStorage.setItem("user", JSON.stringify({ id: data.user.id })); // ✅ burası önemli
 
       toast({
         title: "Giriş Başarılı!",
@@ -94,7 +102,10 @@ const LoginPage = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
+          <Button
+            type="submit"
+            className="w-full bg-purple-600 hover:bg-purple-700"
+          >
             Giriş Yap
           </Button>
         </form>

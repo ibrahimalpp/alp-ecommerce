@@ -18,13 +18,13 @@ const Header = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const { balance } = useBalanceStore();
   const [isClient, setIsClient] = useState(false);
-  const [userExists, setUserExists] = useState(false); // 💥 Kullanıcı var mı localStorage'da?
+  const [userExists, setUserExists] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
     if (typeof window !== "undefined") {
-      const userData = localStorage.getItem('user');
-      setUserExists(!!userData); // user varsa true, yoksa false
+      const userData = localStorage.getItem("user");
+      setUserExists(!!userData);
     }
   }, []);
 
@@ -55,11 +55,19 @@ const Header = () => {
           <Cart />
           <UserButton />
 
-          {/* Wallet */}
+          {/* 💸 Masaüstü için bakiye */}
           {isClient && userExists && (
             <div className="hidden sm:flex items-center gap-2 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
               <Wallet className="w-4 h-4" />
-              <span>₺{balance.toFixed(2)}</span>
+              <span>₺{balance.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</span>
+            </div>
+          )}
+
+          {/* 💸 Mobilde her zaman görünen bakiye */}
+          {isClient && userExists && (
+            <div className="flex sm:hidden items-center gap-1 bg-purple-600 text-white px-2 py-1 rounded-md text-xs font-medium">
+              <Wallet className="w-4 h-4" />
+              <span>₺{balance.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</span>
             </div>
           )}
 
@@ -75,7 +83,7 @@ const Header = () => {
       {/* Mobil Menü */}
       {mobileOpen && <MobileMenu />}
 
-      {/* Tüm Kategoriler */}
+      {/* Kategoriler */}
       <div className="hidden lg:flex py-4 flex-row lg:px-32 xl:px-64 mx-2 items-center justify-between">
         <AllCategories categories={categories} />
       </div>

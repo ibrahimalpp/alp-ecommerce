@@ -12,6 +12,7 @@ import { useBalanceStore } from "@/store/balanceStore";
 import { APIURL } from "@/app/constans";
 import confetti from "canvas-confetti";
 import "@/app/animations.css";
+import { createOrder } from "../../../../../actions/createOrder";
 
 const Cart = () => {
   const { cart, clearCart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -32,17 +33,16 @@ const Cart = () => {
     }
   };
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     const userData = typeof window !== 'undefined' ? localStorage.getItem("user") : null;
-    
+
     if (!userData) {
       toast({
-        title: "Önce Giriş Yap!",
-        description: "Ödeme yapabilmek için giriş yapmalısın.",
+        title: "\u00d6nce Giri\u015f Yap!",
+        description: "\u00d6deme yapabilmek i\u00e7in giri\u015f yapmal\u0131s\u0131n.",
         variant: "destructive",
       });
       setOpen(false);
-     
       return;
     }
 
@@ -50,20 +50,30 @@ const Cart = () => {
 
     if (!parsedUser) {
       toast({
-        title: "Önce Giriş Yap!",
-        description: "Ödeme yapabilmek için giriş yapmalısın.",
+        title: "\u00d6nce Giri\u015f Yap!",
+        description: "\u00d6deme yapabilmek i\u00e7in giri\u015f yapmal\u0131s\u0131n.",
         variant: "destructive",
       });
       setOpen(false);
-     
       return;
     }
 
     if (balance >= totalPrice) {
+      const success = await createOrder(parsedUser.id, cart, totalPrice);
+
+      if (!success) {
+        toast({
+          title: "Sipari\u015f Ba\u015far\u0131s\u0131z",
+          description: "Sipari\u015f verilemedi, l\u00fctfen tekrar dene.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       decreaseBalance(totalPrice);
       clearCart();
       setOpen(false);
-      confetti(); // 🎉 Başarılı ödeme sonrası konfeti
+      confetti();
       router.push("/success");
     } else {
       setOpen(false);

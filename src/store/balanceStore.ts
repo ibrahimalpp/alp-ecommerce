@@ -1,4 +1,7 @@
+'use client';
+
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface BalanceState {
   balance: number;
@@ -7,30 +10,28 @@ interface BalanceState {
   setBalance: (amount: number) => void;
 }
 
-export const useBalanceStore = create<BalanceState>((set) => ({
-  balance: typeof window !== 'undefined'
-    ? (parseFloat(localStorage.getItem('balance') || '1250') || 1250)
-    : 1250,
+export const useBalanceStore = create<BalanceState>()(
+  persist(
+    (set) => ({
+      balance: 1250,
 
-  decreaseBalance: (amount) => set((state) => {
-    const newBalance = state.balance - amount;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('balance', newBalance.toString());
-    }
-    return { balance: newBalance };
-  }),
+      decreaseBalance: (amount) =>
+        set((state) => ({
+          balance: state.balance - amount,
+        })),
 
-  resetBalance: () => set(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('balance', '1250');
-    }
-    return { balance: 1250 };
-  }),
+      resetBalance: () =>
+        set(() => ({
+          balance: 1250,
+        })),
 
-  setBalance: (amount) => set(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('balance', amount.toString());
+      setBalance: (amount) =>
+        set(() => ({
+          balance: amount,
+        })),
+    }),
+    {
+      name: 'balance-storage', // localStorage key adı
     }
-    return { balance: amount };
-  }),
-}));
+  )
+);
