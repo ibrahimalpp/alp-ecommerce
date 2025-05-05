@@ -1,22 +1,12 @@
-<<<<<<< HEAD
-"use client";
-=======
 'use client';
->>>>>>> 073d4fccf2c9d3f8c843d3ddfb74abb6f4f74297
 
 import { useRouter } from "next/navigation";
 import { useCart } from "@/store/cartStore";
 import { useBalanceStore } from "@/store/balanceStore";
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import CardPreview from "./CardPreview";
-import { createOrder } from "../../../../actions/createOrder";
-=======
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import CardPreview from "./CardPreview";
->>>>>>> 073d4fccf2c9d3f8c843d3ddfb74abb6f4f74297
+import CardPreview from "./CardPreview"; // CardPreview bileşeni burada kullanılıyor
+import { createOrder } from "../../../../actions/createOrder"; // Sipariş oluşturma işlemi
 
 const CheckoutPage = () => {
   const { clearCart, cart } = useCart();
@@ -32,14 +22,12 @@ const CheckoutPage = () => {
 
   const [focused, setFocused] = useState<"cardNumber" | "name" | "expiry" | "cvv" | null>(null);
 
-<<<<<<< HEAD
+  // Kullanıcı verilerini simüle etme
   useEffect(() => {
     // GİRİŞ YAPILMIŞ GİBİ YAPMAK İÇİN (TEST AMAÇLI)
     localStorage.setItem("user", JSON.stringify({ id: 1 }));
   }, []);
 
-=======
->>>>>>> 073d4fccf2c9d3f8c843d3ddfb74abb6f4f74297
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -62,7 +50,6 @@ const CheckoutPage = () => {
     e.preventDefault();
     console.log("🚀 handleSubmit çalıştı");
 
-<<<<<<< HEAD
     const userData = localStorage.getItem("user");
     const parsedUser = userData ? JSON.parse(userData) : null;
     console.log("👤 Kullanıcı:", parsedUser);
@@ -72,18 +59,12 @@ const CheckoutPage = () => {
       return;
     }
 
+    // Kart doğrulama (test kartı)
     const isValidCard =
       formData.cardNumber.replace(/\s/g, "") === "4242424242424242" &&
       formData.expiryDate === "12/34" &&
       formData.cvv === "123";
 
-=======
-    const isValidCard =
-      formData.cardNumber.replace(/\s/g, "") === "4242424242424242" &&
-      formData.expiryDate === "12/34" &&
-      formData.cvv === "123";
-
->>>>>>> 073d4fccf2c9d3f8c843d3ddfb74abb6f4f74297
     if (!isValidCard) {
       alert("Kart bilgileri hatalı. Lütfen test kartı kullan:\n4242 4242 4242 4242\n12/34 | 123");
       return;
@@ -93,8 +74,7 @@ const CheckoutPage = () => {
       return sum + (parseFloat(item.price) || 0) * (item.quantity || 1);
     }, 0);
 
-<<<<<<< HEAD
-    console.log("🛒 Cart:", cart);
+    console.log("🛒 Sepet:", cart);
     console.log("💰 Toplam Tutar:", totalPrice);
 
     if (cart.length === 0) {
@@ -111,11 +91,9 @@ const CheckoutPage = () => {
 
     console.log("✅ Sipariş oluşturuldu!");
 
-=======
->>>>>>> 073d4fccf2c9d3f8c843d3ddfb74abb6f4f74297
     decreaseBalance(totalPrice);
     clearCart();
-    router.push('/success');
+    router.push('/success'); // Başarılı sipariş sonrası yönlendirme
   };
 
   return (
@@ -125,8 +103,8 @@ const CheckoutPage = () => {
         {/* Kart Mockup */}
         <div className="w-full lg:w-1/2 flex flex-col items-center">
           <CardPreview
-            name={formData.name}
             cardNumber={formData.cardNumber}
+            name={formData.name}
             expiry={formData.expiryDate}
             cvv={formData.cvv}
             focus={focused}
