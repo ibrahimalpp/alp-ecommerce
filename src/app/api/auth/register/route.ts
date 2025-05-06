@@ -1,7 +1,7 @@
 import { createDirectus, rest, registerUser } from '@directus/sdk';
 import { NextResponse } from 'next/server';
 
-const client = createDirectus(process.env.API_URL as string).with(rest());
+const client = createDirectus(process.env.NEXT_PUBLIC_DIRECTUS_URL as string).with(rest());
 
 export async function POST(request: Request) {
   try {

@@ -13,6 +13,7 @@ import { APIURL } from "@/app/constans";
 import confetti from "canvas-confetti";
 import "@/app/animations.css";
 import { createOrder } from "../../../../../actions/createOrder";
+import type { CartItem } from "@/app/constans";
 
 const Cart = () => {
   const { cart, clearCart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart();

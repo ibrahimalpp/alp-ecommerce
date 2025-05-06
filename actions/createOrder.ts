@@ -1,5 +1,4 @@
-import { CartItem } from "@/store/cartStore";
-
+import type { CartItem } from "@/app/constans";
 export async function createOrder(userId: string, cart: CartItem[], totalPrice: number) {
   try {
     const token = localStorage.getItem("access_token");
@@ -9,15 +8,13 @@ export async function createOrder(userId: string, cart: CartItem[], totalPrice: 
       return false;
     }
 
-    // Sipariş verisi
     const orderBody = {
       user_id: userId,
       totalPrice,
-      orderStatus: ["pending"], // Array olmalı çünkü Directus'ta çoklu seçim var
+      orderStatus: ["pending"],
       status: "published"
     };
 
-    // Siparişi oluştur
     const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/items/order`, {
       method: "POST",
       headers: {
@@ -36,7 +33,6 @@ export async function createOrder(userId: string, cart: CartItem[], totalPrice: 
     const orderData = await orderRes.json();
     const orderId = orderData.data.id;
 
-    // Her ürün için orderitem oluştur
     for (const item of cart) {
       const itemRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/items/orderitem`, {
         method: "POST",

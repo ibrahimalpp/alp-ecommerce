@@ -5,18 +5,30 @@ import { ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/store/cartStore";
 import confetti from 'canvas-confetti';
+import type { CartItem, Product } from "@/app/constans";
 
-const SepeteEkleButton = ({ product }: { product: any }) => {
+const SepeteEkleButton = ({ product }: { product: Product }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
 
   const handleClick = () => {
-    addToCart(product);
+    const cartItem: CartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      icon: product.icon,
+    };
+    
+
+    addToCart(cartItem);
+
     toast({
-      title: "Ürün Sepete Eklendi!",
+      title: "🛒 Ürün Sepete Eklendi!",
       description: `${product.name} başarıyla sepete eklendi.`,
       duration: 2000,
     });
+
     confetti({
       particleCount: 80,
       spread: 70,
